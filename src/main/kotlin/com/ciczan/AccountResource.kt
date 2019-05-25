@@ -1,32 +1,63 @@
 package com.ciczan
 
-import javax.ws.rs.DELETE
-import javax.ws.rs.GET
-import javax.ws.rs.POST
-import javax.ws.rs.PUT
-import javax.ws.rs.Path
-import javax.ws.rs.PathParam
-import javax.ws.rs.Produces
+import java.net.URI
+import java.net.URLDecoder
+import java.net.URLEncoder
+import javax.ws.rs.*
+import javax.ws.rs.core.Context
 import javax.ws.rs.core.MediaType.APPLICATION_JSON
+import javax.ws.rs.core.Response
+import javax.ws.rs.core.UriInfo
 
 @Path("accounts")
 @Produces(APPLICATION_JSON)
 class AccountResource {
 
 
-    val trucoAccount = Account("Cicero", "11012 000316186 01")
-    val trucoAccount2 = Account("Alice", "11012 000316920 05")
-    var accountList = listOf(trucoAccount, trucoAccount2)
+    private val myAccount = Account("My Account", "Cicero", "11012 000316186 01")
+    private val wifeAccount = Account("Wife", "Alice", "11012 000316920 05")
+    private var accounts = mutableMapOf("My Account" to myAccount, "Wife" to wifeAccount)
 
     @GET
-    fun getAccounts(): List<Account> {
-        return accountList
+    @Path("{alias}")
+    fun getAccount(@PathParam("alias") alias: String): Account? {
+        val decodedAlias = URLDecoder.decode(alias, "UTF-8")
+        val value = accounts[decodedAlias]
+
+        return when (value) {
+            is Account -> value
+            else -> throw WebApplicationException(404)
+        }
+    }
+
+    @GET
+    fun getAccounts(): Collection<Account> {
+        return this.accounts.values
     }
 
     @POST
-    fun createAccount(acc: Account) {
-        accountList += acc
+    @Consumes(APPLICATION_JSON)
+    fun createAccount(acc: Account, @Context ui: UriInfo): Response {
+        accounts[acc.alias] = acc
         //https://jersey.github.io/documentation/latest/representations.html#d0e6315
+
+        val encodedAlias = URLEncoder.encode(acc.alias, "UTF-8")
+
+        return Response.created(URI.create(ui.requestUri.toString() + "/" + encodedAlias)).build()
+        //.header("Content-Type", APPLICATION_JSON)  + acc.alias
+    }
+
+    @PUT
+    @Consumes(APPLICATION_JSON)
+    @Path("{alias}")
+    fun updateAccount(@PathParam("alias") alias: String, acc: Account) {
+        accounts[alias] = acc
+    }
+
+    @DELETE
+    @Path("{alias}")
+    fun deleteAccount(@PathParam("alias") alias: String): Account? {
+        return accounts.remove(alias)
     }
 
 }

@@ -1,3 +1,3 @@
 package com.ciczan
 
-data class Account(val owner: String, val number: String)
+data class Account(val alias: String, val owner: String, val number: String)

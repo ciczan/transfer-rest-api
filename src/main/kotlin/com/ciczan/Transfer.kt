@@ -1,8 +1,8 @@
 package com.ciczan
 
-enum class TransferStatus { NEW, REJECTED, PENDING, DONE}
+enum class TransferStatus { PENDING,  REJECTED,  SETTLED}
 
 data class Transfer(val from: String, val to: String, val value: Int, val ccy: String) {
     var id = 0
-    var status = TransferStatus.NEW
+    var status = TransferStatus.PENDING
 }
