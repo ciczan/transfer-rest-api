@@ -1,13 +1,13 @@
 package com.ciczan.provider
 
-import com.ciczan.Transfer
+import com.ciczan.domain.Transfer
 
-interface TransferProvider {
+interface TransferService {
     fun allTransfers(): List<Transfer>
 
 }
 
-object FixedTransferProvider: TransferProvider {
+object FixedTransferService: TransferService {
 
     private val transfer1 = Transfer("Cicero", "Zappo", 2000, "GBP")
     private val transfer2 = Transfer("Zappo", "Cicero", 2000, "GBP")

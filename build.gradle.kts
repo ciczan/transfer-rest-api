@@ -50,7 +50,13 @@ dependencies {
     compile("com.sun.xml.bind:jaxb-impl:2.2.11")
     compile("javax.activation:activation:1.1.1")
 
+    //Exposed. Persistence framework
+    compile("org.jetbrains.exposed:exposed:0.13.7")
+
+
     runtime("ch.qos.logback:logback-classic:1.1.8")
+
+
 }
 
 application {

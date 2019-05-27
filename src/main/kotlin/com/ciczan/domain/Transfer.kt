@@ -1,4 +1,4 @@
-package com.ciczan
+package com.ciczan.domain
 
 enum class TransferStatus { PENDING,  REJECTED,  SETTLED}
 
