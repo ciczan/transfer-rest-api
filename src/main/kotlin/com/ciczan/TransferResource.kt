@@ -9,9 +9,7 @@ import javax.ws.rs.core.MediaType
 
 @Path("transfers")
 @Produces(MediaType.APPLICATION_JSON)
-class TransferResource {
-
-    val service: TransferService = FixedTransferService
+class TransferResource(val service: TransferService) {
 
     @GET
     fun listTransfers() = service.allTransfers()

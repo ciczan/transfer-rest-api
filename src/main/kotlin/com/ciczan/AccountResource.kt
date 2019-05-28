@@ -1,6 +1,8 @@
 package com.ciczan
 
 import com.ciczan.domain.Account
+import com.ciczan.domain.User
+import com.ciczan.provider.AccountService
 import java.net.URI
 import java.net.URLDecoder
 import java.net.URLEncoder
@@ -12,11 +14,12 @@ import javax.ws.rs.core.UriInfo
 
 @Path("accounts")
 @Produces(APPLICATION_JSON)
-class AccountResource {
+class AccountResource(val service: AccountService) {
 
+    private val ciceroUser = User("Cicero", "Brazil")
 
-    private val myAccount = Account("My Account", "Cicero", "11012 000316186 01")
-    private val wifeAccount = Account("Wife", "Alice", "11012 000316920 05")
+    private val myAccount = Account(ciceroUser, "My Account", "Cicero",  "11012 000316186 01")
+    private val wifeAccount = Account(ciceroUser, "Wife", "Alice", "11012 000316920 05")
     private var accounts = mutableMapOf("My Account" to myAccount, "Wife" to wifeAccount)
 
     @GET

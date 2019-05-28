@@ -1,13 +1,17 @@
 package com.ciczan.provider
 
+import com.ciczan.domain.User
+
 interface UserService {
-    fun getLoggedUser(): String
+    fun getUser(name: String): User?
 }
 
 object FixedUserService :  UserService {
 
-    override fun getLoggedUser(): String {
-        return "Cicero"
+    val user1 = User("Cicero", "Brazil")
+
+    override fun getUser(name: String): User {
+        return user1
     }
 
 }

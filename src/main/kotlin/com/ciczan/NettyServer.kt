@@ -14,8 +14,9 @@ import javax.ws.rs.ext.ContextResolver
 object NettyServer {
     @JvmStatic
     fun main(args: Array<String>) {
-        val resourceConfig = ResourceConfig.forApplication(JerseyApplication())
-                .register(ContextResolver<ObjectMapper> { ObjectMapper().registerModule(KotlinModule()) })
+
+        val contextResolver = ContextResolver<ObjectMapper> { ObjectMapper().registerModule(KotlinModule()) }
+        val resourceConfig = ResourceConfig.forApplication(JerseyApplication()).register(contextResolver)
 
 
         resourceConfig.register(createConsoleLoggingFeature())

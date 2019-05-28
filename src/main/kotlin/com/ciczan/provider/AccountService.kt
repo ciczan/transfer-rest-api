@@ -7,9 +7,9 @@ interface AccountService {
 
     fun getAllAccounts(user: User): Collection<Account>
 
-    fun deleteAccount(user: User)
+    fun deleteAccount(account: Account)
 
-    fun insertAccount(user: User)
+    fun insertAccount(account: Account): Account
 
     fun getAccount(user: User, alias: String): Account?
 
@@ -17,12 +17,15 @@ interface AccountService {
 
 object FixedAccountsService: AccountService {
 
-    private val myAccount = Account("My Account", "Cicero", "11012 000316186 01")
-    private val wifeAccount = Account("Wife", "Alice", "11012 000316920 05")
+    private val ciceroUser = User("Cicero", "Brazil")
+
+    private val myAccount = Account(ciceroUser, "My Account", "Cicero",  "11012 000316186 01")
+    private val wifeAccount = Account(ciceroUser, "Wife", "Alice", "11012 000316920 05")
     private var accounts = mutableMapOf("My Account" to myAccount, "Wife" to wifeAccount)
 
-    override fun insertAccount(user: User) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun insertAccount(account: Account): Account {
+        accounts[account.alias] = account
+        return account
     }
 
     override fun getAccount(user: User, alias: String): Account? {
@@ -34,7 +37,7 @@ object FixedAccountsService: AccountService {
         return this.accounts.values
     }
 
-    override fun deleteAccount(user: User) {
+    override fun deleteAccount(account: Account) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

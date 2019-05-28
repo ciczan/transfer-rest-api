@@ -1,6 +1,7 @@
 import groovyx.net.http.HttpResponseDecorator
 import groovyx.net.http.HttpResponseException
 import spock.lang.Narrative
+import spock.lang.Shared
 import spock.lang.Specification
 import groovyx.net.http.RESTClient
 import spock.lang.Stepwise
@@ -14,9 +15,19 @@ In this API adding an account means registering an account for transfers.
 @Stepwise
 class AccountsSpec extends Specification {
 
-    def client = new RESTClient("http://localhost:8080")
+    @Shared
+    RESTClient client
 
     final String EXCHANGE_ACC_ALIAS = "Stock Exchange"
+
+    def setupSpec() {
+        TestNettyServer.startServer()
+        client = new RESTClient("http://localhost:8080")
+    }
+
+    def cleanupSpec() {
+        TestNettyServer.stopServer()
+    }
 
     def "GET to /accounts returns the list of registered accounts"() {
         given: "A call for the accounts"
