@@ -11,6 +11,9 @@ import java.util.logging.Level
 import java.util.logging.Logger
 import javax.ws.rs.ext.ContextResolver
 
+/**
+ * Standalone server
+ */
 object NettyServer {
     @JvmStatic
     fun main(args: Array<String>) {

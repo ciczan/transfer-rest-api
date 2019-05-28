@@ -18,8 +18,8 @@ class AccountResource(val service: AccountService) {
 
     private val ciceroUser = User("Cicero", "Brazil")
 
-    private val myAccount = Account(ciceroUser, "My Account", "Cicero",  "11012 000316186 01")
-    private val wifeAccount = Account(ciceroUser, "Wife", "Alice", "11012 000316920 05")
+    private val myAccount = Account(ciceroUser, "My Account", "Cicero",  "11012 000316186 01", "EUR")
+    private val wifeAccount = Account(ciceroUser, "Wife", "Alice", "11012 000316920 05", "EUR")
     private var accounts = mutableMapOf("My Account" to myAccount, "Wife" to wifeAccount)
 
     @GET

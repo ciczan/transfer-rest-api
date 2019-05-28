@@ -28,7 +28,7 @@ object Accounts: IntIdTable() {
 }
 
 class AccountRow(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<AccountRow>(Users)
+    companion object : IntEntityClass<AccountRow>(Accounts)
 
     var user by Accounts.user
     var alias by Accounts.alias

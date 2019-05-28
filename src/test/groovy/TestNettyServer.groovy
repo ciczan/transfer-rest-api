@@ -26,8 +26,8 @@ class TestNettyServer {
         ///Add test data
         def user = dao.addUser(new User("Pierre", "France"))
 
-        Account myAccount = new Account(user, "My Account", "Pierre",  "11012 000316186 01")
-        Account wifeAccount = new Account(user, "Wife", "Alice", "11012 000316920 05")
+        Account myAccount = new Account(user, "My Account", "Pierre",  "11012 000316186 01", "EUR")
+        Account wifeAccount = new Account(user, "Wife", "Alice", "11012 000316920 05", "EUR")
         dao.insertAccount(myAccount)
         dao.insertAccount(wifeAccount)
 
@@ -39,7 +39,7 @@ class TestNettyServer {
 
         resourceConfig.register(createConsoleLoggingFeature())
 
-        server = NettyHttpContainerProvider.createServer(URI.create("http://localhost:8080/"), resourceConfig, true)
+        server = NettyHttpContainerProvider.createHttp2Server(URI.create("http://localhost:8080/"), resourceConfig, null)
         Runtime.getRuntime().addShutdownHook { -> server.close()}
 
     }

@@ -71,6 +71,7 @@ class H2DAO: AccountService, UserService, TransferService {
                 alias = account.alias
                 owner = account.owner
                 number = account.number
+                currency = account.ccy
             }
             account.id = ar.id.value
         }
