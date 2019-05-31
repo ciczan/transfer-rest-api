@@ -18,8 +18,8 @@ class AccountResource(val service: AccountService) {
 
     private val ciceroUser = User("Cicero", "Brazil")
 
-    private val myAccount = Account(ciceroUser, "My Account", "Cicero",  "11012 000316186 01", "EUR")
-    private val wifeAccount = Account(ciceroUser, "Wife", "Alice", "11012 000316920 05", "EUR")
+    private val myAccount = Account("My Account", "Cicero",  "11012 000316186 01", "EUR")
+    private val wifeAccount = Account( "Wife", "Alice", "11012 000316920 05", "EUR")
     private var accounts = mutableMapOf("My Account" to myAccount, "Wife" to wifeAccount)
 
     @GET
@@ -42,13 +42,17 @@ class AccountResource(val service: AccountService) {
     @POST
     @Consumes(APPLICATION_JSON)
     fun createAccount(acc: Account, @Context ui: UriInfo): Response {
-        accounts[acc.alias] = acc
+
+        acc.userName = ciceroUser.name
+
+        service.insertAccount(acc)
+
+        //accounts[acc.alias] = acc
         //https://jersey.github.io/documentation/latest/representations.html#d0e6315
 
         val encodedAlias = URLEncoder.encode(acc.alias, "UTF-8")
 
         return Response.created(URI.create(ui.requestUri.toString() + "/" + encodedAlias)).build()
-        //.header("Content-Type", APPLICATION_JSON)  + acc.alias
     }
 
     @PUT

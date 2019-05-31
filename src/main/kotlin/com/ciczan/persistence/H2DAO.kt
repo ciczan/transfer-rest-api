@@ -7,10 +7,7 @@ import com.ciczan.provider.AccountService
 import com.ciczan.provider.TransferService
 import com.ciczan.provider.UserService
 import org.jetbrains.exposed.dao.EntityID
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class H2DAO: AccountService, UserService, TransferService {
@@ -34,10 +31,10 @@ class H2DAO: AccountService, UserService, TransferService {
         var user: User? = null
 
         transaction {
-           val result = UserRow.find { Users.name eq name }
+           val result = UserRow.find { Users.id eq name }
             if (result.count() > 0) {
                 val userRow = result.first()
-                user = User(name = userRow.name, country = userRow.country)
+                user = User(name = userRow.name.value, country = userRow.country)
             }
        }
 
@@ -48,10 +45,9 @@ class H2DAO: AccountService, UserService, TransferService {
         transaction {
             addLogger(StdOutSqlLogger)
             val ur = UserRow.new {
-                name = user.name
+                name =  EntityID(user.name, Users)
                 country = user.country
             }
-            user.id = ur.id.value
         }
         return user
     }
@@ -66,20 +62,36 @@ class H2DAO: AccountService, UserService, TransferService {
 
     override fun insertAccount(account: Account): Account {
         transaction {
+            val thisUser = UserRow.find { Users.id eq account.userName }
+            if (thisUser.count() == 0)
+                return@transaction
+
             val ar = AccountRow.new {
-                user = UserRow[account.user.id].id
+                user = thisUser.first().name
                 alias = account.alias
                 owner = account.owner
                 number = account.number
                 currency = account.ccy
             }
+
             account.id = ar.id.value
         }
         return account
     }
 
     override fun getAccount(user: User, alias: String): Account? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        var acc: Account? = null
+        transaction {
+            val selection = AccountRow.find{(Accounts.alias eq alias ) and Accounts.user.eq(EntityID(user.name, Users))}
+
+            if (selection.count() > 0 ) {
+
+                val row = selection.first()
+                acc = Account(row.alias, row.owner, row.number, row.currency)
+
+            }
+        }
+        return acc
     }
 
     override fun getAllAccounts(user: User): Collection<Account> {

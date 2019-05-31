@@ -1,21 +1,19 @@
 package com.ciczan.persistence
 
-import org.jetbrains.exposed.dao.EntityID
-import org.jetbrains.exposed.dao.IntEntity
-import org.jetbrains.exposed.dao.IntEntityClass
-import org.jetbrains.exposed.dao.IntIdTable
+import org.jetbrains.exposed.dao.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.*
+import javax.jws.soap.SOAPBinding
 
-object Users: IntIdTable() {
-    val name = varchar("name", 50).uniqueIndex()
+object Users: IdTable<String>() {
+    override val id = varchar("name", 50).entityId()
     val country = varchar("country", 50)
 }
 
-class UserRow(id: EntityID<Int>) : IntEntity(id) {
-    companion object : IntEntityClass<UserRow>(Users)
+class UserRow(id: EntityID<String>) : Entity<String>(id) {
+    companion object : EntityClass<String, UserRow>(Users)
 
-    var name by Users.name
+    var name by Users.id
     var country by Users.country
 }
 
@@ -70,7 +68,7 @@ fun main(args: Array<String>) {
         SchemaUtils.create(Users, Accounts, Transfers)
 
         val firstUser = UserRow.new {
-            name = "Pierre"
+            name = EntityID("Pierre", Users)
             country = "France"
         }
 

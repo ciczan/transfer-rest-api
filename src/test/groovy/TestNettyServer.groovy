@@ -26,8 +26,10 @@ class TestNettyServer {
         ///Add test data
         def user = dao.addUser(new User("Pierre", "France"))
 
-        Account myAccount = new Account(user, "My Account", "Pierre",  "11012 000316186 01", "EUR")
-        Account wifeAccount = new Account(user, "Wife", "Alice", "11012 000316920 05", "EUR")
+        Account myAccount = new Account("My Account", "Pierre",  "11012 000316186 01", "EUR")
+        myAccount.userName = user.name
+        Account wifeAccount = new Account("Wife", "Alice", "11012 000316920 05", "EUR")
+        wifeAccount.userName = user.name
         dao.insertAccount(myAccount)
         dao.insertAccount(wifeAccount)
 

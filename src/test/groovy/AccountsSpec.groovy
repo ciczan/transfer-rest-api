@@ -9,7 +9,7 @@ import spock.lang.Title
 import static groovyx.net.http.ContentType.*
 
 @Title("Account resource specification")
-@Narrative("""The accounts in this 
+@Narrative("""The accounts in this ...
 In this API adding an account means registering an account for transfers.
 """)
 @Stepwise
@@ -42,7 +42,7 @@ class AccountsSpec extends Specification {
 
         given: "A new account"
         def newAccount = [path: "accounts",
-                          body: [alias: EXCHANGE_ACC_ALIAS, owner: "TheExchange", number: 9],
+                          body: [alias: EXCHANGE_ACC_ALIAS, owner: "TheExchange", number: 9, ccy: "EUR"],
                           requestContentType: JSON]
 
         when: "The account is posted"
